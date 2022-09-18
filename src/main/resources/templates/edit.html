@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактирование профиля</title>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <style>
+        body {
+            background: -webkit-linear-gradient(left, #3931af, #00c6ff);
+        }
+
+        .emp-profile {
+            padding: 3%;
+            margin-top: 3%;
+            margin-bottom: 3%;
+            border-radius: 0.5rem;
+            background: #fff;
+        }
+
+        .profile-img {
+            text-align: center;
+        }
+
+        .profile-img img {
+            width: 70%;
+            height: 100%;
+        }
+
+        .profile-img .file {
+            position: relative;
+            overflow: hidden;
+            margin-top: -20%;
+            width: 70%;
+            border: none;
+            border-radius: 0;
+            font-size: 15px;
+            background: #212529b8;
+        }
+
+        .profile-img .file input {
+            position: absolute;
+            opacity: 0;
+            right: 0;
+            top: 0;
+        }
+
+        .profile-head h5 {
+            color: #333;
+        }
+
+        .profile-head h6 {
+            color: #0062cc;
+        }
+
+        .profile-edit-btn {
+            border: none;
+            border-radius: 1.5rem;
+            width: 70%;
+            padding: 2%;
+            font-weight: 600;
+            color: #6c757d;
+            cursor: pointer;
+        }
+
+        .proile-rating {
+            font-size: 12px;
+            color: #818182;
+            margin-top: 5%;
+        }
+
+        .proile-rating span {
+            color: #495057;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .profile-head .nav-tabs {
+            margin-bottom: 5%;
+        }
+
+        .profile-head .nav-tabs .nav-link {
+            font-weight: 600;
+            border: none;
+        }
+
+        .profile-head .nav-tabs .nav-link.active {
+            border: none;
+            border-bottom: 2px solid #0062cc;
+        }
+
+        .profile-work {
+            padding: 14%;
+            margin-top: -15%;
+        }
+
+        .profile-work p {
+            font-size: 12px;
+            color: #818182;
+            font-weight: 600;
+            margin-top: 10%;
+        }
+
+        .profile-work a {
+            text-decoration: none;
+            color: #495057;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .profile-work ul {
+            list-style: none;
+        }
+
+        .profile-tab label {
+            font-weight: 600;
+        }
+
+        .profile-tab p {
+            font-weight: 600;
+            color: #0062cc;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">КОСТРОМАЭНЕРГО</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/}">Мой профиль
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/vacation/booking}">Забронировать отпуск</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/search/employee}">Поиск сотрудника по
+                        имени</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/create/employee}">Добавить нового
+                        сотрудника</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<br>
+<div class="container emp-profile">
+    <form method="post" th:action="@{/edit/employee}" th:object="${employee}" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-img">
+                    <img th:src="${employee.photo}" alt=""/>
+                    <br>
+                    <input id="imageFile" type="file" th:name="imageFile"/>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="profile-head">
+                    <h5 th:text="${employee.surname} + ' ' + ${employee.name} + ' ' + ${employee.middleName}"></h5>
+                    <h6 th:text="${employee.profession}"></h6>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                               aria-controls="home" aria-selected="true">Инфо</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Save"/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-work">
+                    <p>УВЛЕЧЕНИЯ</p>
+                    <input id="hobbies" th:field="*{hobbies}" type="text"/>
+                    <p>НАВЫКИ</p>
+                    <input id="skills" th:field="*{skills}" type="text"/>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="tab-content profile-tab" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Логин</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p th:text="${employee.login}"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>ФИО</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p th:text="${employee.surname} + ' ' + ${employee.name} + ' ' + ${employee.middleName}"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Дата рождения</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p th:text="${employee.dateOfBirth}"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Первый рабочий день в компании</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p th:text="${employee.startWorkDay}"></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Почта</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input id="email" th:field="*{email}" type="email"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Телефон</label>
+                            </div>
+                            <div class="col-md-6">
+                                <input id="number" th:field="*{phone}" type="number"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Профессия</label>
+                            </div>
+                            <div class="col-md-6">
+                                <p th:text="${employee.profession}"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Опыт</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>Expert</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Зарпалата</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:text="${employee.salary}"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Количество отпускных дней</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:text="${employee.vacation.countHolidayDay}"></p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>Уровень анлийского</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p>Expert</p>
+                        </div>
+                    </div>
+
+                    <div th:if="${employee.vacation.startVacation != null}" class="row">
+                        <div class="col-md-6">
+                            <label>Начало отпуска</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:if="${employee.vacation.startVacation != null}"
+                               th:text="${employee.vacation.startVacation}"></p>
+                        </div>
+                    </div>
+
+                    <div th:if="${employee.vacation.startVacation != null}" class="row">
+                        <div class="col-md-6">
+                            <label>Конец отпуска</label>
+                        </div>
+                        <div class="col-md-6">
+                            <p th:if="${employee.vacation.endVacation != null}"
+                               th:text="${employee.vacation.endVacation}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="id" th:field="${employee.id}" required="required"/>
+        <input type="hidden" id="name" th:field="${employee.name}" required="required"/>
+        <input type="hidden" id="surname" th:field="${employee.surname}" required="required"/>
+        <input type="hidden" id="middleName" th:field="${employee.middleName}" required="required"/>
+        <input type="hidden" id="login" th:field="${employee.login}" required="required"/>
+        <input type="hidden" id="password" th:field="${employee.password}" required="required"/>
+        <input type="hidden" id="dateOfBirth" th:field="${employee.dateOfBirth}" required="required"/>
+        <input type="hidden" id="role" th:field="${employee.role}" required="required"/>
+        <input type="hidden" id="startWorkDay" th:field="${employee.startWorkDay}" required="required"/>
+        <input type="hidden" id="profession" th:field="${employee.profession}" required="required"/>
+        <input type="hidden" id="salary" th:field="${employee.salary}" required="required"/>
+        <input type="hidden" id="vacation" th:field="${employee.vacation}" required="required"/>
+    </form>
+</div>
+</body>
+</html>
